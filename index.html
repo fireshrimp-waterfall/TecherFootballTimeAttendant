@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <title>รายงานกิจกรรม</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Sarabun' rel='stylesheet'>
+    <!-- Bootstrap 5 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+    <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+    <?!= include('stylesheet'); ?>
+</head>
+
+<body>
+    <div class="container py-5">
+        <h2 class="mb-4 text-center">แบบฟอร์มรายงานกิจกรรมประจำวัน kansakhamula</h2>
+        <!-- onsubmit="handleFormSubmit(this)" -->
+        <!--action="https://httpbin.org/post" method="post"-->
+        <div class="tabs col-12 flex flex-wrap mb-6">
+            <div class="tab col-4 px-6 py-3 rounded-t-lg font-medium active" data-tab="morningday">เช้า</div>
+            <div class="tab col-4 px-6 py-3 rounded-t-lg font-medium" data-tab="lunchday">เที่ยง</div>
+            <div class="tab col-4 px-6 py-3 rounded-t-lg font-medium" data-tab="endday">เย็น</div>
+        </div>
+        <form class="content active" id="activityForm" onsubmit="handleFormSubmit(this)">
+            <!-- เลือกเวรประจำวัน -->
+            <div class="mb-3">
+                <label for="duty" class="form-label">เวรประจำวัน</label>
+                <select class="form-select" name="duty" id="duty" required>
+                    <option value="">-- เลือกเวร --</option>
+                    <option value="0">อาทิตย์</option>
+                    <option value="1">จันทร์</option>
+                    <option value="2">อังคาร</option>
+                    <option value="3">พุทธ</option>
+                    <option value="4">พฤหัดสบดี</option>
+                    <option value="5">ศุกข์</option>
+                    <option value="6">เสาร์</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="dutyspace" class="form-label">พื้นที่รับผิดชอบ</label>
+                <select class="form-select" name="dutyspace" id="dutyspace" required>
+                    <option value="">-- เลือกพื้นที่รับผิดชอบ --</option>
+                    <option value="หน้าประตูโรงเรียน" selected="selected">หน้าประตูโรงเรียน</option>
+                    <option value="พื้นที่โรงอาหาร">พื้นที่โรงอาหาร</option>
+                    <option value="หลังอาคาร">หลังอาคาร</option>
+                    <option value="ห้องน้ำ">ห้องน้ำ</option>
+                    <option value="โรงยิม">โรงยิม</option>
+                </select>
+            </div>
+            <!-- ข้อความบันทึกผู้แจ้งเวรประจำวัน -->
+            <div class="mb-3">
+                <label for="manfname" class="form-label">ผู้รายงานประจำเวร</label>
+                <div class="manfname" id="manfname">
+                    <input type="radio" name="fname" id="fname1" class="fname1" value="fname1">
+                    <label for="radio">person1</label>
+                    <input type="radio" name="fname" id="fname2" class="fname2" value="fname2">
+                    <label for="radio">person2</label>
+                    <input type="radio" name="fname" id="fname3" class="fname3" value="fname3">
+                    <label for="radio">person3</label>
+                    <input type="radio" name="fname" id="fname4" class="fname4" value="fname4">
+                    <label for="radio">person4</label>
+                    <input type="radio" name="fname" id="fname5" class="fname5" value="fname5">
+                    <label for="radio">person5</label>
+                </div>
+            </div>
+            <!-- ข้อความบันทึกผู้แจ้งเวรประจำวัน -->
+            <div class="mb-3">
+                <label for="groupdduty" class="form-label">รายการผู้มาเข้าร่วมเวร</label>
+                <div class="groupdduty" id="groupdduty">
+                    <input type="checkbox" name="fname" id="person1" class="person1" value="person1">
+                    <label for="checkbox">person1</label>
+                    <input type="checkbox" name="fname" id="person2" class="person2" value="person2">
+                    <label for="checkbox">person2</label>
+                    <input type="checkbox" name="fname" id="person3" class="person3" value="person3">
+                    <label for="checkbox">person3</label>
+                    <input type="checkbox" name="fname" id="person4" class="person4" value="person3">
+                    <label for="checkbox">person4</label>
+                    <input type="checkbox" name="fname" id="person5" class="person5" value="person3">
+                    <label for="checkbox">person5</label>
+                </div>
+            </div>
+
+            <!-- ข้อความบันทึกกิจกรรม -->
+            <div class="mb-3">
+                <label for="activityNote" class="form-label">รายงานเหตุการณ์</label>
+                <div class="newline"></div>
+                <input type="radio" name="activityNote" id="activityNote1" class="form-check-input"
+                    value="เหตุการณ์ปกติ" checked>
+                <label for="activityNote1" class="form-check-label">เหตุการณ์ปกติ</label>
+                <input type="radio" name="activityNote" id="activityNote2" class="form-check-input"
+                    value="เหตุการณ์ไม่ปกติ">
+                <label for="activityNote2" class="form-check-label">เหตุการณ์ไม่ปกติ</label>
+            </div>
+
+            <!-- อัพโหลดรูปภาพ -->
+            <div class="mb-3">
+                <label for="activityImages" class="form-label">อัพโหลดรูปภาพกิจกรรม</label>
+                <input class="form-control" type="file" name="activityImages" id="activityImages" multiple
+                    accept="image/*">
+            </div>
+
+            <!-- ปุ่มอัพโหลดข้อมูลทั้งหมด -->
+            <div class="d-flex justify-content-end gap-2">
+                <button type="submit" class="btn btn-primary">อัพโหลดข้อมูลทั้งหมด</button>
+            </div>
+            <div class="mb-3">
+                <div id="output"></div>
+            </div>
+        </form>
+        <form class="content" id="lunchday">
+            <label for="">เที่ยง</label>
+        </form>
+        <form class="content" id="endday">
+            <label for="">เย็น</label>
+        </form>
+    </div>
+    <div class="container py-5 title-show">
+        <h2>หน้าแสดงผลข้อมูลเวรประจำวัน</h2>
+    </div>
+    <div class="reportbox container py-5">
+        <div class="rowt tablehead" style="text-align:center">
+            <div class="colt">no</div>
+            <div class="colt">วันที่</div>
+            <div class="colt">วัน</div>
+            <div class="colt">พื้นที่รับผิดชอบ</div>
+            <div class="colt">ผู้รายงาน</div>
+            <div class="colt">รายงานกิจกรรม</div>
+            <div class="colt imgshow">รูปภาพเวรเช้า</div>
+            <div class="colt imgshow">รูปภาพเวรเที่ยง</div>
+            <div class="colt imgshow">รูปภาพเวรเย็น</div>
+        </div>
+        <div class="reportbody rowt">
+            <div class="rowtt">
+                <div class="colt">1</div>
+                <div class="colt">2</div>
+                <div class="colt">3</div>
+                <div class="colt">4</div>
+                <div class="colt">5</div>
+                <div class="colt">6</div>
+                <div class="colt imgshow">7</div>
+            </div>
+            <div class="rowtt">
+                <div class="colt">1</div>
+                <div class="colt">2</div>
+                <div class="colt">3</div>
+                <div class="colt">4</div>
+                <div class="colt">5</div>
+                <div class="colt">6</div>
+                <div class="colt imgshow">7</div>
+            </div>
+            <div class="rowtt">
+                <div class="colt">1</div>
+                <div class="colt">2</div>
+                <div class="colt">3</div>
+                <div class="colt">4</div>
+                <div class="colt">5</div>
+                <div class="colt">6</div>
+                <div class="colt imgshow">7</div>
+            </div>
+            <div class="rowtt">
+                <div class="colt">1</div>
+                <div class="colt">2</div>
+                <div class="colt">3</div>
+                <div class="colt">4</div>
+                <div class="colt">5</div>
+                <div class="colt">6</div>
+                <div class="colt imgshow">7</div>
+            </div>
+            <div class="rowtt">
+                <div class="colt">1</div>
+                <div class="colt">2</div>
+                <div class="colt">3</div>
+                <div class="colt">4</div>
+                <div class="colt">5</div>
+                <div class="colt">6</div>
+                <div class="colt imgshow">7</div>
+            </div>
+            <div class="rowtt">
+                <div class="colt">1</div>
+                <div class="colt">2</div>
+                <div class="colt">3</div>
+                <div class="colt">4</div>
+                <div class="colt">5</div>
+                <div class="colt">6</div>
+                <div class="colt imgshow">7</div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Bootstrap JS + Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="./jsscript.js"></script>
+    <!-- JavaScript -->
+    <!--<script>
+        window.addEventListener('load', dailyduty);
+        window.addEventListener('load', checkduty);
+    </script>-->
+    <?!=include('JavaScript');?>
+</body>
+
+</html>

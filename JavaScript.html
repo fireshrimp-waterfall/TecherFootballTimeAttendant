@@ -1,0 +1,190 @@
+<script>
+  function preventFormSubmit() {
+    var forms = document.querySelectorAll('form');
+    for (var i = 0; i < forms.length; i++) {
+      forms[i].addEventListener('submit', function (event) {
+        event.preventDefault();
+      });
+    }
+    //console.log(forms);
+  }
+  function handleFormSubmit(formObject) {
+    google.script.run.withSuccessHandler(updateUrl).withFailureHandler(onFailure).uploadFiles(formObject);
+  }
+
+  function updateUrl(url) {
+    var div = document.getElementById('output');
+    if (isValidURL(url)) {
+      div.innerHTML = '<div class="alert alert-success" role="alert"><a href="' + url + '">File uploaded successfully!</a></div>';
+      loadReports();
+      document.getElementById("activityForm").reset();
+    } else {
+      //Show warning message if file is not uploaded or provided
+      div.innerHTML = '<div class="alert alert-danger" role="alert">' + url + '!</div>';
+    }
+  }
+
+  function onFailure(error) {
+    var div = document.getElementById('output');
+    div.innerHTML = '<div class="alert-warning" role="alert">' + error.message + '!</div>';
+  }
+
+  function isValidURL(string) {
+    var res = string.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g);
+    return (res !== null);
+  }
+
+  function dailyduty() {
+    //const days = ["อาทิตย์", "จันทร์", "อังคาร", "พุทธ", "พฤหัดสบดี", "ศุกข์", "เสาร์"];
+    var date = new Date();
+    var day = date.getDay();
+    var elements = document.getElementById('duty');
+    elements.value = day;
+    //console.log(date);
+    //console.log(day);
+  }
+
+  function loadReports() {
+    google.script.run.withSuccessHandler(function (data) {
+      /*console.log("loadreportdata");
+      var mystr = JSON.stringify(data);
+      console.log("loadreportdata");
+      console.log(mystr);*/
+
+      //console.log(data);
+      var tbody = document.querySelector(".reportbox .reportbody");
+
+      //console.log(tbody);
+      tbody.innerHTML = "";
+      //console.log(tbody);
+
+      data.forEach(row => {
+        var divRow = document.createElement("div");
+        //console.log("data row");
+        row.forEach((cell, i) => {
+          //console.log(cell);
+          //console.log(i);
+          var divCell = document.createElement("div");
+          if (i === 7 && cell) {
+            divCell.innerHTML = `<img src="https://drive.google.com/thumbnail?id=${cell}&sz=s128"/>`;
+            divCell.className = "colt imgshow";
+          } else {
+            if (i === 1) {
+              console.log(cell);
+              var date = new Date(cell);
+
+              var day = date.getUTCDate();         // 1 - 31
+              var month = date.getUTCMonth() + 1;  // 0 - 11, so add 1
+              var year = date.getUTCFullYear();    // full year, e.g., 2025
+
+              //console.log(day, month, year);
+              divCell.textContent = day + "/" + month + "/" + year;
+              divCell.className = "colt";
+            }
+            else {
+              if (i != 6) {
+                divCell.textContent = cell;
+                divCell.className = "colt";
+              }
+            }
+          }
+          divRow.className = "rowtt";
+          divRow.appendChild(divCell);
+        });
+        tbody.appendChild(divRow);
+      });
+
+    }).getReports();
+  }
+
+  function loadDudyGroup() {
+    google.script.run.withSuccessHandler(function (data) {
+      //console.log(data);
+      var lendata = data.length;
+      var persondocument = document.getElementById('groupdduty');
+      var fnamedoc = document.getElementById('manfname');
+
+      persondocument.innerHTML = "";
+      fnamedoc.innerHTML = "";
+
+      //console.log(persondocument);
+      //console.log(lendata);
+      
+      for (var rowi = 0; rowi < lendata; rowi++) {
+
+        var divbox = document.createElement("div");
+        divbox.className="col-md-6 col-lg-6 col-xl-2 col-xxl-2";
+        var divbox2 = document.createElement("div");
+        divbox2.className="col-md-6 col-lg-6 col-xl-2 col-xxl-2";
+        
+        var checkbox_obj = document.createElement("input");
+        var radiobox = document.createElement("input");
+        var name = data[rowi][1] + data[rowi][2] + data[rowi][3];
+
+        checkbox_obj.type = "checkbox";
+        checkbox_obj.className = "person" + rowi;
+        checkbox_obj.name = "person"+rowi;
+        checkbox_obj.id = "person" + rowi;
+        checkbox_obj.value = name;
+
+        radiobox.type = "radio";
+        radiobox.className = "fname" + rowi;
+        radiobox.name = "fname";
+        radiobox.id = "fname" + rowi;
+        radiobox.value = name;
+
+        var labelradio = document.createElement("label");
+        labelradio.htmlFor = "radiobox";
+        labelradio.textContent = name;
+
+        var labelcheckbox = document.createElement("label");
+        labelcheckbox.htmlFor = "checkbox";
+        labelcheckbox.textContent = name;
+
+        //var brtext = document.createElement("br");
+
+        //console.log(rowi);
+        //console.log(name);
+        //console.log(radiobox);
+        //console.log(labelradio);
+
+        divbox.appendChild(checkbox_obj);
+        divbox.appendChild(labelcheckbox);
+        persondocument.appendChild(divbox);
+        divbox2.appendChild(radiobox);
+        divbox2.appendChild(labelradio);
+        fnamedoc.appendChild(divbox2);
+
+      }
+    }
+    ).getDutyGroup();
+  }
+
+  $(document).ready(function () {
+    $('.tab').click(function () {
+      var idtab = $(this).data('tab');
+      console.log("id form click is");
+      console.log(idtab);
+      document.querySelectorAll('.tab').forEach(content => {
+        content.classList.remove('active');
+      });
+      document.querySelectorAll('.content').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      if (idtab === "morningday") {
+        document.getElementById("activityForm").classList.add('active');
+        document.querySelector(`.tab[data-tab="${idtab}"]`).classList.add('active');
+      }
+      else {
+        document.getElementById(idtab).classList.add('active');
+        document.querySelector(`.tab[data-tab="${idtab}"]`).classList.add('active');
+      }
+      //document.getElementById(idtab).classList.add('active');
+    });
+  });
+
+  window.addEventListener('load', preventFormSubmit);
+  window.addEventListener('load', loadReports);
+  window.addEventListener('load', dailyduty)
+  window.addEventListener('load', loadDudyGroup);
+</script>

@@ -1,0 +1,104 @@
+<script>
+  function preventFormSubmit() {
+        var forms = document.querySelectorAll('form');
+        for (var i = 0; i < forms.length; i++) {
+          forms[i].addEventListener('submit', function(event) {
+            event.preventDefault();
+          });
+        }
+        console.log(forms);
+      }
+    function handleFormSubmit(formObject){
+    google.script.run.withSuccessHandler(updateUrl).withFailureHandler(onFailure).uploadFiles(formObject);
+  }
+
+  function updateUrl(url) {
+    var div = document.getElementById('output');
+    if(isValidURL(url)){
+      div.innerHTML = '<div class="alert alert-success" role="alert"><a href="' + url + '">File uploaded successfully!</a></div>';
+      loadReports();
+      document.getElementById("activityForm").reset();
+    }else{
+      //Show warning message if file is not uploaded or provided
+      div.innerHTML = '<div class="alert alert-danger" role="alert">'+ url +'!</div>';
+    }
+  }
+
+  function onFailure(error) {
+    var div = document.getElementById('output');
+    div.innerHTML = '<div class="alert-warning" role="alert">'+ error.message +'!</div>';
+  }
+
+  function isValidURL(string) {
+    var res = string.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g);
+    return (res !== null);
+  }
+  function dailyduty()
+{
+    //const days = ["อาทิตย์", "จันทร์", "อังคาร", "พุทธ", "พฤหัดสบดี", "ศุกข์", "เสาร์"];
+    var date = new Date();
+    var day = date.getDay();
+    var elements = document.getElementById('duty');
+    elements.value = day;
+    console.log(date);
+    console.log(day);
+}
+  function loadReports() {
+        google.script.run.withSuccessHandler(function(data) {
+          /*console.log("loadreportdata");
+          var mystr = JSON.stringify(data);
+          console.log("loadreportdata");
+          console.log(mystr);*/
+          
+          console.log(data);
+          var tbody = document.querySelector(".reportbox .reportbody");
+          
+          console.log(tbody);
+          tbody.innerHTML = "";
+          console.log(tbody);
+
+          data.forEach(row => {
+            var divRow = document.createElement("div");
+            console.log("data row");
+            row.forEach((cell, i) => {
+              console.log(cell);
+              console.log(i);
+              var divCell = document.createElement("div");
+              if (i === 7 && cell) {
+                divCell.innerHTML = `<img src="https://drive.google.com/thumbnail?id=${cell}&sz=s128"/>`;
+                divCell.className = "colt imgshow";
+              } else 
+              {
+                if(i === 1)
+                {
+                  console.log(cell);
+                  var date = new Date(cell);
+
+                  var day = date.getUTCDate();         // 1 - 31
+                  var month = date.getUTCMonth() + 1;  // 0 - 11, so add 1
+                  var year = date.getUTCFullYear();    // full year, e.g., 2025
+
+                  console.log(day,month,year);
+                  divCell.textContent = day+"/"+month+"/"+year;
+                  divCell.className = "colt";
+                }
+                else
+                {
+                  if(i!=6)
+                  {
+                    divCell.textContent = cell;
+                    divCell.className = "colt";
+                  }
+                }
+              }
+              divRow.className="rowtt";
+              divRow.appendChild(divCell);
+            });
+            tbody.appendChild(divRow);
+          });
+          
+        }).getReports();
+      }
+      window.addEventListener('load', preventFormSubmit);
+      window.addEventListener('load', loadReports);
+</script>
